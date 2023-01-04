@@ -1,7 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 from language_translation import *
 
 
@@ -21,7 +20,7 @@ class Analyzer():
             plt.rcParams['font.sans-serif'] = ['SimHei']
 
         # some pre-processing steps
-        self.df['Time'] =  pd.to_datetime(self.df['Time'], format='%Y-%m-%d')
+        self.df['Time'] =  pd.to_datetime(self.df['Time'], format='%Y/%m/%d')
         self.df['year_month'] = self.df['Time'].apply(lambda x: x.strftime('%Y-%m')) 
         self.groups = self.df.groupby('year_month')
 
@@ -70,17 +69,42 @@ class Analyzer():
         for i in range(0, col_number):
             rects_temp = ax.bar(x - width*col_number/2 + width/2 + i*width, data_list[i], width, label=year_list[i], edgecolor="black")
             ax.bar_label(rects_temp, padding=3)
-        ax.set_ylabel(y_label[self.language], fontsize=15)
-        ax.set_xlabel(x_label[self.language], fontsize=15)
-        ax.set_title(title[self.language], fontsize=17)
+        ax.set_ylabel(plot_group_by_month_y_label[self.language], fontsize=15)
+        ax.set_xlabel(plot_group_by_month_x_label[self.language], fontsize=15)
+        ax.set_title(plot_group_by_month_title[self.language], fontsize=17)
         ax.set_xticks(x, labels)
         ax.legend()
         fig.tight_layout()
         plt.show()
 
 
+    def plot_cumulative_obituary_number_by_month(self, year_list):
+        # year_list: a list of years that is designated, elements are str or int format, max year number is set to 5, required
+        # year_list example: ['2019', '2020', '2021', '2022'], which limits year range to 2019 to 2022
+        # If you want to change year_list length, you may also need to change width of bars in this function by yourself
+        assert isinstance(year_list, list)
+        assert len(year_list) > 0 and len(year_list) <=5
+        data_list = self.obituary_number_data_group_by_month(year_list)
+        labels = month_label[self.language]
+
+        # cumulate data in data_list, save cumulative result to new_data_list
+        new_data_list = []
+        for list_of_one_year in data_list:
+            new_data_list.append(np.cumsum(list_of_one_year))
+        
+        # plot
+        fig, ax = plt.subplots()
+        for i in range(0, len(new_data_list)):
+            ax.plot(labels, new_data_list[i], label=year_list[i], marker='x')
+        ax.set_ylabel(plot_cum_by_month_y_label[self.language], fontsize=15)
+        ax.set_xlabel(plot_cum_by_month_x_label[self.language], fontsize=15)
+        ax.set_title(plot_cum_by_month_title[self.language], fontsize=17)
+        ax.grid()
+        ax.legend()
+        fig.tight_layout()
+        plt.show()
+
 
 #analyzer = Analyzer('university_1.csv', language='zh-hans')
 #analyzer.plot_obituary_number_data_group_by_month(year_list=['2019', '2020', '2021', '2022'])
-
-
+#analyzer.plot_cumulative_obituary_number_by_month(year_list=['2019', '2020', '2021', '2022'])
