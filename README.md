@@ -32,13 +32,19 @@ analyzer = Analyzer(csv_file_path='university_1.csv', language='zh-hans')
 ```python
 analyzer.plot_obituary_number_data_group_by_month(year_list=['2019', '2020', '2021', '2022'])
 ```
-**year_list**: 指定讣告数据文件涵盖的年份，这必须与你自己的数据相匹配。注意，每一年不要求包含该年所有月份的数据，此时该年份没有被涵盖的月份的讣告数量自动认为是0参与绘图。
+**year_list**: 指定讣告数据文件涵盖的年份，这必须与你自己的数据相匹配。
 
 根据示例数据文件[university_1.csv](university_1.csv)得到的结果图绘制如下：
 ![](group_by_month_zhhans.png?raw=true "某高校不同年份下每月讣告数量图")
 
-### 3. 待开发...
+### 3. 绘制不同年份下按月累加的讣告数量对比图
+```python
+analyzer.plot_cumulative_obituary_number_by_month(year_list=['2019', '2020', '2021', '2022'])
+```
+**year_list**: 指定讣告数据文件涵盖的年份，这必须与你自己的数据相匹配。
 
+根据示例数据文件[university_1.csv](university_1.csv)得到的结果图绘制如下：
+![](cum_by_month_zhhans.png?raw=true "某高校不同年份下每月讣告数量图")
 
 ## 建议与贡献
 欢迎在Issues中提出任何反馈与建议，比如你希望对讣告数据进行哪些分析与可视化，我们会尽力与尽快实现。
