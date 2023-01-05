@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime, timedelta
 from language_translation import *
 
 
@@ -11,6 +12,8 @@ class Analyzer():
 
         # read csv file to pandas dataframe
         self.df = pd.read_csv(csv_file_path)
+        # verify df is not null
+        assert len(self.df) > 0
 
         # set language for data visualization result
         assert language in ['zh-hans', 'en']
@@ -23,6 +26,10 @@ class Analyzer():
         self.df['Time'] =  pd.to_datetime(self.df['Time'], format='%Y/%m/%d')
         self.df['year_month'] = self.df['Time'].apply(lambda x: x.strftime('%Y-%m')) 
         self.groups = self.df.groupby('year_month')
+
+        # get earliest and latest date of self.df, format: datetime object
+        self.earliest_date = min(self.df['Time'])
+        self.latest_date = max(self.df['Time'])
 
 
     def obituary_number_data_group_by_month(self, year_list):
@@ -105,6 +112,59 @@ class Analyzer():
         plt.show()
 
 
+    def obituary_number_data_group_by_date(self, start_date, end_date):
+        # To analyze obituary number group by date
+        # start_date: set start date, start_date must be before end_date, ex: '2019-01-01'
+        # end_date: set end date, end_date must be after start_date, ex: '2022-12-31'
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        
+        # check if start_date and end_date is valid
+        assert start_date < end_date
+        assert start_date >= self.earliest_date
+        assert end_date <= self.latest_date
+
+        # group by date
+        groups_by_date = self.df.groupby('Time')
+        # target_date_list: all dates between start_date and end_date, format ex: '2019-01-01', str
+        target_date_list = pd.date_range(start_date, end_date - timedelta(days=1), freq='d').strftime('%Y-%m-%d').tolist()
+        
+        # calc obituary numbers group by date and save results to data_list for further visualization
+        data_list = []
+        for date_temp in target_date_list:
+            try:
+                data_list.append(len(groups_by_date.get_group(date_temp)))
+            except KeyError:
+                # current date has no data
+                data_list.append(0)
+        return (target_date_list, data_list)
+
+
+    def plot_cumulative_obituary_number_by_date(self, start_date, end_date):
+        # plot with results from self.obituary_number_data_group_by_date(self, start_date, end_date)
+        # start_date: set start date, start_date must be before end_date, ex: '2019-01-01'
+        # end_date: set end date, end_date must be after start_date, ex: '2022-12-31'
+        target_date_list, data_list = self.obituary_number_data_group_by_date(start_date, end_date)
+        # calc cumulative data_list
+        data_list = np.cumsum(data_list)
+        # convert target_date_list to datetime
+        plot_target_date_list = [datetime.strptime(date, '%Y-%m-%d').date() for date in target_date_list]
+        
+        # plot
+        fig, ax = plt.subplots()
+        ax.plot(plot_target_date_list, data_list, label=plot_cum_by_date_label[self.language])
+        ax.set_ylabel(plot_cum_by_date_y_label[self.language], fontsize=15)
+        ax.set_xlabel(plot_cum_by_date_x_label[self.language], fontsize=15)
+        ax.set_title(plot_cum_by_date_title[self.language]+', '+start_date+' to '+end_date, fontsize=17)
+        ax.grid()
+        ax.legend(loc='upper left')
+        fig.tight_layout()
+        plt.show()
+
+
+
+
 #analyzer = Analyzer('university_1.csv', language='zh-hans')
 #analyzer.plot_obituary_number_data_group_by_month(year_list=['2019', '2020', '2021', '2022'])
 #analyzer.plot_cumulative_obituary_number_by_month(year_list=['2019', '2020', '2021', '2022'])
+#analyzer.plot_cumulative_obituary_number_by_date(start_date='2019-01-01', end_date='2022-12-31')

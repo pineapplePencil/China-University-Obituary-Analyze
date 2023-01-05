@@ -40,3 +40,27 @@ plot_cum_by_month_title = {
 	'zh-hans': '某高校不同年份下按月累加的讣告数量图',
 	'en': 'obituary number of a certain Chinese university in different years cumulates by month',
 }
+
+
+plot_cum_by_date_y_label = {
+	'zh-hans': '累加讣告数量',
+	'en': 'Cumulative Obituary Number', 
+}
+
+
+plot_cum_by_date_x_label = {
+	'zh-hans': '日期',
+	'en': 'Date',
+}
+
+
+plot_cum_by_date_title = {
+	'zh-hans': '某高校按日累加的讣告数量图',
+	'en': 'obituary number of a certain Chinese university cumulates by day',
+}
+
+
+plot_cum_by_date_label = {
+	'zh-hans': '按日累加讣告数量曲线', 
+	'en': 'Cumulative Obituary Number Curve by day'
+}
