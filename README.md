@@ -52,7 +52,23 @@ analyzer.plot_cumulative_obituary_number_by_month(year_list=['2019', '2020', '20
 **year_list**: 指定讣告数据文件涵盖的年份，这必须与你自己的数据相匹配。
 
 根据示例数据文件[university_1.csv](university_1.csv)得到的结果图绘制如下：
-![](cum_by_month_zhhans.png?raw=true "某高校不同年份下每月讣告数量图")
+![](cum_by_month_zhhans.png?raw=true "某高校不同年份下按月累加的讣告数量图")
+
+### 4. 绘制按日累加的讣告数量曲线
+```python
+analyzer.plot_cumulative_obituary_number_by_date(start_date='2019-01-01', end_date='2022-12-31')
+```
+**start_date**: 指定起始日期，日期格式如'2019-01-01'，表示起始日期为2019年1月1日。起始日期必须不早于你的数据文件中所有记录的最早日期，且早于终止日期end_date，否则抛出AssertionError。
+
+**end_date**: 指定终止日期，日期格式如'2022-12-31'，表示终止日期为2022年12月31日。终止日期必须不晚于你的数据文件中所有记录的最晚日期，且晚于起始日期start_date，否则抛出AssertionError。
+
+根据示例数据文件[university_1.csv](university_1.csv)得到的结果图绘制如下（选取了两个不同的时间范围）：
+
+**第1张图时间范围：2019年1月1日至2022年12月31日**
+![](cum_by_day_zhhans_1.png?raw=true "某高校按日累加的讣告数量图")
+
+**第2张图时间范围：2022年6月1日至2022年12月31日**
+![](cum_by_day_zhhans_2.png?raw=true "某高校按日累加的讣告数量图")
 
 ## 建议与贡献
 欢迎在Issues中提出任何反馈与建议，比如你希望对讣告数据进行哪些分析与可视化，我们会尽力与尽快实现。
