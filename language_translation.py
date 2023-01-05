@@ -62,5 +62,35 @@ plot_cum_by_date_title = {
 
 plot_cum_by_date_label = {
 	'zh-hans': '按日累加讣告数量曲线', 
-	'en': 'Cumulative Obituary Number Curve by day'
+	'en': 'Cumulative Obituary Number Curve by day',
+}
+
+
+plot_age_histogram_x_label = {
+	'zh-hans': '年龄', 
+	'en': 'Age',
+}
+
+
+plot_age_histogram_y_label = {
+	'zh-hans': '频率', 
+	'en': 'Frequency',
+}
+
+
+plot_age_histogram_title = {
+	'zh-hans': '特定时间区间内去世年龄的频率分布直方图', 
+	'en': 'Histogram of age at death for a specific time range',
+}
+
+
+plot_age_histogram_target_label = {
+	'zh-hans': '目标时间区间', 
+	'en': 'Target Time Range',
+}
+
+
+plot_age_histogram_compare_label = {
+	'zh-hans': '对照组时间区间', 
+	'en': 'Comparison Group Time Range',
 }

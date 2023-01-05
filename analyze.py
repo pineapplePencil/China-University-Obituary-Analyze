@@ -162,9 +162,73 @@ class Analyzer():
         plt.show()
 
 
+    def plot_age_histogram(self, start_date, end_date, compare_group_date_range=None):
+        # plot histogram of age between start_date and end_date(include start_date and end_date)
+        # start_date: set start date, start_date must be before end_date, ex: '2019-01-01'
+        # end_date: set end date, end_date must be after start_date, ex: '2022-12-31'
+        # compare_group_date_range, set some date ranges as comparison group(as second histogram in the same chart)
+        # compare_group_date_range is a list of lists, each list in it represents a date range, these date range does not need to be consecutive
+        # compare_group_date_range format example: [[start_1, end_1], [start_2, end_2]]
+
+        # check if start_date and end_date is valid
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        assert start_date < end_date
+        assert start_date >= self.earliest_date
+        assert end_date <= self.latest_date
+
+        # check legality if compare_group_date_range is not None
+        if compare_group_date_range != None:
+            assert isinstance(compare_group_date_range, list)
+            assert len(compare_group_date_range) > 0
+            for i in range(0, len(compare_group_date_range)):
+                assert isinstance(compare_group_date_range[i], list)
+                assert len(compare_group_date_range[i]) == 2
+                # convert to datetime object
+                compare_group_date_range[i][0] = datetime.strptime(compare_group_date_range[i][0], "%Y-%m-%d")
+                compare_group_date_range[i][1] = datetime.strptime(compare_group_date_range[i][1], "%Y-%m-%d")
+                assert compare_group_date_range[i][0] < compare_group_date_range[i][1]
+                assert compare_group_date_range[i][0] >= self.earliest_date
+                assert compare_group_date_range[i][1] <= self.latest_date
+        
+        if compare_group_date_range != None:
+             # get df_compare if compare_group_date_range is given
+            df_compare = self.df[self.df.Time.between(compare_group_date_range[0][0], compare_group_date_range[0][1])]
+            if len(compare_group_date_range) >= 2:
+                for i in range(1, len(compare_group_date_range)):
+                    df_temp = self.df[self.df.Time.between(compare_group_date_range[i][0], compare_group_date_range[i][1])]
+                    df_compare = pd.concat([df_compare, df_temp], axis=0, ignore_index=True)
+
+        df_target = self.df[self.df.Time.between(start_date, end_date)]
+
+        # plot
+        # two histograms overlap each other
+        #if compare_group_date_range != None:
+            #bins = np.linspace(30, 110, 100)
+            #plt.hist(df_target['Age'], bins=bins, edgecolor='black', weights=np.zeros_like(df_target['Age']) + 1. / df_target['Age'].size, alpha=0.5, label=plot_age_histogram_target_label[self.language])
+            #plt.hist(df_compare['Age'], bins=bins, edgecolor='black', weights=np.zeros_like(df_compare['Age']) + 1. / df_compare['Age'].size, alpha=0.5, label=plot_age_histogram_compare_label[self.language])
+        
+        # two histograms side-by-side
+        if compare_group_date_range != None:
+            plt.hist([df_target['Age'], df_compare['Age']], weights=[np.zeros_like(df_target['Age'])+1./df_target['Age'].size, np.zeros_like(df_compare['Age'])+1./df_compare['Age'].size], bins=50, density=True, label=[plot_age_histogram_target_label[self.language], plot_age_histogram_compare_label[self.language]])
+        
+        else:
+            plt.hist(df_target['Age'], bins=bins, edgecolor='black', weights=np.zeros_like(df_target['Age'])+1./df_target['Age'].size, alpha=0.5, label=plot_age_histogram_target_label[self.language])
+
+        plt.xlabel(plot_age_histogram_x_label[self.language], fontsize=15)
+        plt.ylabel(plot_age_histogram_y_label[self.language], fontsize=15)
+        plt.title(plot_age_histogram_title[self.language], fontsize=17)
+        plt.legend(loc='upper left')
+        plt.tight_layout()
+        plt.show()
 
 
-#analyzer = Analyzer('university_1.csv', language='zh-hans')
+
+
+#analyzer = Analyzer('university_1.csv', language='en')
 #analyzer.plot_obituary_number_data_group_by_month(year_list=['2019', '2020', '2021', '2022'])
 #analyzer.plot_cumulative_obituary_number_by_month(year_list=['2019', '2020', '2021', '2022'])
 #analyzer.plot_cumulative_obituary_number_by_date(start_date='2019-01-01', end_date='2022-12-31')
+
+#compare_group_date_range = [['2019-01-01', '2019-01-31'], ['2019-11-01', '2019-12-31'], ['2020-01-01', '2020-01-31'], ['2020-11-01', '2020-12-31'], ['2021-01-01', '2021-01-31'], ['2021-11-01', '2021-12-31'], ['2022-11-01', '2022-11-30']]
+#analyzer.plot_age_histogram(start_date='2022-01-01', end_date='2022-12-31', compare_group_date_range=compare_group_date_range)
