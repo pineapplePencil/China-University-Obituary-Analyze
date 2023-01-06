@@ -162,7 +162,7 @@ class Analyzer():
         plt.show()
 
 
-    def plot_age_histogram(self, start_date, end_date, compare_group_date_range=None):
+    def plot_age_histogram(self, start_date, end_date, compare_group_date_range=None, show_avg=True):
         # plot histogram of age between start_date and end_date(include start_date and end_date)
         # start_date: set start date, start_date must be before end_date, ex: '2019-01-01'
         # end_date: set end date, end_date must be after start_date, ex: '2022-12-31'
@@ -176,6 +176,8 @@ class Analyzer():
         assert start_date < end_date
         assert start_date >= self.earliest_date
         assert end_date <= self.latest_date
+
+        assert show_avg == True or show_avg == False
 
         # check legality if compare_group_date_range is not None
         if compare_group_date_range != None:
@@ -200,6 +202,7 @@ class Analyzer():
                     df_compare = pd.concat([df_compare, df_temp], axis=0, ignore_index=True)
 
         df_target = self.df[self.df.Time.between(start_date, end_date)]
+        
 
         # plot
         # two histograms overlap each other
@@ -210,11 +213,16 @@ class Analyzer():
         
         # two histograms side-by-side
         if compare_group_date_range != None:
-            plt.hist([df_target['Age'], df_compare['Age']], weights=[np.zeros_like(df_target['Age'])+1./df_target['Age'].size, np.zeros_like(df_compare['Age'])+1./df_compare['Age'].size], bins=50, density=True, label=[plot_age_histogram_target_label[self.language], plot_age_histogram_compare_label[self.language]])
-        
+            plt.hist([df_target['Age'], df_compare['Age']], weights=[np.zeros_like(df_target['Age'])+1./df_target['Age'].size, np.zeros_like(df_compare['Age'])+1./df_compare['Age'].size], bins=50, density=True, label=[plot_age_histogram_target_label[self.language], plot_age_histogram_compare_label[self.language]])   
+            if show_avg == True:
+                df_compare_avg_age = round(df_compare['Age'].mean(), 2)
+                plt.axvline(x=df_compare_avg_age, color='green', linestyle='--', label=plot_age_histogram_avg_compare_label[self.language]+': '+str(df_compare_avg_age))
         else:
-            plt.hist(df_target['Age'], bins=bins, edgecolor='black', weights=np.zeros_like(df_target['Age'])+1./df_target['Age'].size, alpha=0.5, label=plot_age_histogram_target_label[self.language])
+            plt.hist(df_target['Age'], bins=50, edgecolor='black', weights=np.zeros_like(df_target['Age'])+1./df_target['Age'].size, alpha=0.5, label=plot_age_histogram_target_label[self.language])
 
+        if show_avg == True:
+            df_target_avg_age = round(df_target['Age'].mean(), 2)
+            plt.axvline(x=df_target_avg_age, color='red', linestyle='--', label=plot_age_histogram_avg_target_label[self.language]+': '+str(df_target_avg_age))
         plt.xlabel(plot_age_histogram_x_label[self.language], fontsize=15)
         plt.ylabel(plot_age_histogram_y_label[self.language], fontsize=15)
         plt.title(plot_age_histogram_title[self.language], fontsize=17)
@@ -231,4 +239,4 @@ class Analyzer():
 #analyzer.plot_cumulative_obituary_number_by_date(start_date='2019-01-01', end_date='2022-12-31')
 
 #compare_group_date_range = [['2019-01-01', '2019-01-31'], ['2019-11-01', '2019-12-31'], ['2020-01-01', '2020-01-31'], ['2020-11-01', '2020-12-31'], ['2021-01-01', '2021-01-31'], ['2021-11-01', '2021-12-31'], ['2022-11-01', '2022-11-30']]
-#analyzer.plot_age_histogram(start_date='2022-01-01', end_date='2022-12-31', compare_group_date_range=compare_group_date_range)
+#analyzer.plot_age_histogram(start_date='2022-12-01', end_date='2022-12-31', show_avg=True, compare_group_date_range=compare_group_date_range)

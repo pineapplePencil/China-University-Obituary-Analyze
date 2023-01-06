@@ -94,3 +94,15 @@ plot_age_histogram_compare_label = {
 	'zh-hans': '对照组时间区间', 
 	'en': 'Comparison Group Time Range',
 }
+
+
+plot_age_histogram_avg_compare_label = {
+	'zh-hans': '对照组平均年龄',
+	'en': 'Average Age of Comparison Group'
+}
+
+
+plot_age_histogram_avg_target_label = {
+	'zh-hans': '目标时间段平均年龄',
+	'en': 'Average Age of Target Group'
+}
