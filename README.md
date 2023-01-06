@@ -1,3 +1,5 @@
+**[English readme](README_en.md)**
+
 # 中国高校讣告数据分析
 
 ## 项目简介
