@@ -82,7 +82,7 @@ analyzer.plot_age_histogram(start_date='2022-12-01', end_date='2022-12-31', show
 
 **end_date**: 指定待分析时间区间的终止日期，日期格式如'2022-12-31'，表示终止日期为2022年12月31日。终止日期必须不晚于你的数据文件中所有记录的最晚日期，且晚于起始日期start_date，否则抛出AssertionError。
 
-**compare_group_date_range**: 指定对照组时间区间，compare_group_date_range是一个list，其中每个元素也是一个list(下称子区间list)，每个子区间list指定一个对照组子时间区间，可以指定多个子时间区间，并且这些子时间区间不要求是连续的。格式示例如：[[start_1, end_1], [start_2, end_2]]。注意，每个子区间均需满足时间先后关系，即每个时间不能超出你的数据文件的时间范围，且每个子区间的起始时间必须早于结束时间，否则抛出AssertionError。
+**compare_group_date_range**: 指定对照组时间区间。对照组是可选项，非必须，不需要对照组时可以直接在plot_age_histogram函数的参数中删除compare_group_date_range或者将compare_group_date_range的值设定为None。compare_group_date_range默认值为None。pare_group_date_range是一个list，其中每个元素也是一个list(下称子区间list)，每个子区间list指定一个对照组子时间区间，可以指定多个子时间区间，并且这些子时间区间不要求是连续的。格式示例如：[[start_1, end_1], [start_2, end_2]]。注意，每个子区间均需满足时间先后关系，即每个时间不能超出你的数据文件的时间范围，且每个子区间的起始时间必须早于结束时间，否则抛出AssertionError。
 
 **show_avg**: 是否在图中显示待分析时间区间和对照组时间区间（如果有指定对照组的话）的年龄平均值。show_avg只能为True或False。
 
